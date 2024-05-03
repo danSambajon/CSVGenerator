@@ -1,0 +1,31 @@
+﻿@using CSVGenerator.Models
+@model RowsCount
+
+@{
+    ViewData["Title"] = "Generated";
+}
+
+<div style="text-align: left">
+    <br />
+    <h1 class="display-4" style="text-align: left;"><b>Records List</b></h1>
+    <hr /><br />
+    <h2 class="display-6" style="text-align: left;">Fuel records in CSV: <b>@Model.fuels</b></h2>     <a onclick="downloaded()" href="@Url.Action("DownloadFile", "Home", new { fileNumber = 1 })" type="button" class="btn btn-outline-primary btn-lg">Download Fuels</a><br />
+
+    <br />
+    <h2 class="display-6" style="text-align: left;">Lube records in CSV: <b>@Model.Lubes</b></h2>     <a onclick="downloaded()" href="@Url.Action("DownloadFile", "Home", new { fileNumber = 2 })" type="button" class="btn btn-outline-danger btn-lg">Download Lubes</a><br />
+
+    <br />
+    <h2 class="display-6" style="text-align: left;">Safedrop records in CSV: <b>@Model.safedrops</b></h2>      <a onclick="downloaded()" href="@Url.Action("DownloadFile", "Home", new { fileNumber = 3 })" type="button" class="btn btn-outline-success btn-lg">Download Safedrops</a><br />
+    <br />
+    <br />
+    <h2 class="display-6" style="text-align: left;">You can close the POS and the app now. Have a nice day! </h2>
+    <button class="btn btn-primary btn-lg" onclick="stop()">Close App</button>
+    </div> 
+    @Html.Raw(TempData["msg"])
+    <script>
+        function stop() {
+            var url = '@Url.Action("StopApplication", "Home")';
+            window.location.href = url;
+            window.parent.close();
+        }
+    </script>
