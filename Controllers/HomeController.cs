@@ -84,7 +84,6 @@ namespace CSVGenerator.Controllers
                             --AND INV_DATE='2023-12-01'
                             and INV_DATE between strftime('%Y','now')||'-01-01' and strftime('%Y','now')||'-'||strftime('%m','now')||'-'||strftime('%d','now')
                              ORDER BY xTANK,xOID) i,
-
                             (SELECT DISTINCT
                             date(xYear||'-01-01','+'||(xMONTH-1)||' month','+'||(xDay-1)||' day') INV_DATE,
                             xCORPCODE,xSITECODE,xTANK,xPUMP,xNOZZLE,
@@ -113,9 +112,8 @@ namespace CSVGenerator.Controllers
                             LEFT JOIN xVIP x3 ON (x.xTid=x3.xTid)
                             WHERE  x.xAPIFLAG=0 and (x2.xFLAG & 2)= 0 and (x1.xFLAG & 2)=0 and xFTYPE='H' and xFINDEX=12 and xTANK <>0 and xPRICEDB <> 0
                              GROUP BY INV_DATE,xTANK,xITEMCODE,xPUMP,xNOZZLE,xPRICEDB,xTRANSACTION,x.id) s WHERE 1=1  
-                            --AND INV_DATE='2023-12-01'
-                            --and xYEAR=strftime('%Y','now') and xMONTH=strftime('%m','now') and xDay=strftime('%d','now')
-                            and INV_DATE between strftime('%Y','now')||'-01-01' and strftime('%Y','now')||'-'||strftime('%m','now')||'-'||strftime('%d','now')
+                             and INV_DATE BETWEEN strftime('%Y', DATE('now', '-1 year')) || '-12-01' AND strftime('%Y', DATE('now', '-1 year')) || '-12-31'
+                             or INV_DATE between strftime('%Y','now')||'-01-01' and strftime('%Y','now')||'-'||strftime('%m','now')||'-'||strftime('%d','now')
                              ORDER BY xTANK,xOID";
                     sqliteFilePath = System.IO.Path.Combine(sqlPath, "journal.sqlite");
                     destPath = "D:\\RealSoft\\RealPOS\\realhq";
@@ -150,7 +148,9 @@ namespace CSVGenerator.Controllers
                             INNER JOIN 
                                 xml_USERINFO u ON 1=1
                             WHERE 
-                                INV_DATE BETWEEN DATE(STRFTIME('%Y', 'now', '-1 year') || '-12-01') AND DATE('now')
+	                            1=1  
+	                            and INV_DATE BETWEEN strftime('%Y', DATE('now', '-1 year')) || '-12-01' AND strftime('%Y', DATE('now', '-1 year')) || '-12-31'
+	                            or INV_DATE between strftime('%Y','now')||'-01-01' and strftime('%Y','now')||'-'||strftime('%m','now')||'-'||strftime('%d','now')	
                             ORDER BY 
                                 INV_DATE";
                     sqliteFilePath = System.IO.Path.Combine(sqlPath, "journal.sqlite");
@@ -169,13 +169,13 @@ namespace CSVGenerator.Controllers
                             time(substr(x1.xSTAMP,9,2)||':'||substr(x1.xSTAMP,11,2)||':'||substr(x1.xSTAMP,13,2) ) TTime,                          
                             x1.xSTAMP,
                             x1.xOID,xONAME,xBatch as Shift,              
-                            xAMOUNT1 Amount                                         
-                                      
+                            xAMOUNT1 Amount      
                             FROM xFunctions x2 
                             INNER JOIN xTickets x1 ON (x2.xTid=x1.id)
                             WHERE x2.xACCOUNTCODE='SD' or x2.xACCOUNTCODE='LC') s,xml_USERINFO u
-                            WHERE 
-                             INV_DATE between strftime('%Y','now')||'-01-01' and strftime('%Y','now')||'-'||strftime('%m','now')||'-'||strftime('%d','now')
+                            WHERE 1=1  
+	                             and INV_DATE BETWEEN strftime('%Y', DATE('now', '-1 year')) || '-12-01' AND strftime('%Y', DATE('now', '-1 year')) || '-12-31'
+	                             or INV_DATE between strftime('%Y','now')||'-01-01' and strftime('%Y','now')||'-'||strftime('%m','now')||'-'||strftime('%d','now')
                              ORDER BY INV_DATE 
                             ";
                     sqliteFilePath = System.IO.Path.Combine(sqlPath, "journal.sqlite");
